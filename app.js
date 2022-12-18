@@ -1,8 +1,20 @@
-const bodyParser = require('body-parser')
 const express = require('express')
+var cors = require('cors')
+const app = express()
+var whitelist = ['http://example1.com', 'http://example2.com']
+var corsOptions = {
+    origin: function (origin, callback) {
+        if (whitelist.indexOf(origin) !== -1) {
+            callback(null, true)
+        } else {
+            callback(new Error('Not allowed by CORS'))
+        }
+    }
+}
+app.use(cors(corsOptions))
+const bodyParser = require('body-parser')
 const path = require('path')
 const createConnection = require('./DB/connection')
-const app = express()
 require('dotenv').config()
 const port = process.env.PORT || 3000
 createConnection()
